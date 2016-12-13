@@ -36,7 +36,7 @@ before_install:
 - conda info -a
 
 - conda create -n pg_env -c https://conda.binstar.org/cjs14 pygauss
-script:coverage run  setup.py test
+script: coverage run  setup.py test
 
 
 language: python
