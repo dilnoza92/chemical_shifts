@@ -13,7 +13,7 @@ env:
 
 install:
 - pip install coveralls
-- python setup.py install test
+- python setup.py install 
 
 
 
@@ -36,6 +36,8 @@ before_install:
 - conda info -a
 
 - conda create -n pg_env -c https://conda.binstar.org/cjs14 pygauss
+script:coverage run  setup.py test
+
 
 language: python
 python: 2.7
