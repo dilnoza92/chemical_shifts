@@ -38,5 +38,5 @@ before_install:
 - conda create -n pg_env -c https://conda.binstar.org/cjs14 pygauss
 
 language: python
-python: 3.5
+python: 2.7
 
