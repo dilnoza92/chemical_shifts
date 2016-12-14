@@ -23,9 +23,9 @@ How to run the code with inputs given in the terminal
 --------
 This package genereates a 2d NOESY spectrum of plumed chemical shifts. In this example cs-cs-100.dat in final_project folder has the plumed outputs. The package computes NOEs and makes a plot of it and save it as final_project.png. Another file that is needed is called COLVARN_outputs has the labels of atoms from which the NOEs are computed.
 
-.. image:: https://github.com/dilnoza92/schrodinger/blob/master/chemical_shifts/final_project/final_project.png   
 
 
+.. image:: https://github.com/dilnoza92/chemical_shifts/blob/master/final_project/final_project.png
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
