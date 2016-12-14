@@ -28,7 +28,7 @@ The scatter plot of 2D NOESY spectrum for N atoms of Villin protein is given bel
 
 The plot with gaussian added to the NOESY peaks is shown below:
 
-..image:: https://github.com/dilnoza92/chemical_shifts/blob/master/final_project_gaussian.png
+.. image:: https://github.com/dilnoza92/chemical_shifts/blob/master/final_project_gaussian.png
 
 
 
