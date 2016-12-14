@@ -27,6 +27,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
+import scipy.stats
 from scipy.stats import norm
 import warnings
 import matplotlib
@@ -248,7 +249,7 @@ sc=ax.scatter(x_H, y_H, intense)
 ax.grid()
 plt.xlabel('chemical shifts')
 plt.ylabel('chemical shifts')
-plt.title(r'Simulated 2D NOESY Spectroscopy of N atoms of Villin Peptide')
+plt.title(r'Simulated 2D NOESY Spectroscopy of N atoms')
 plt.savefig('final_project.png'.format(colvar_name)) 
 plt.show()
 
