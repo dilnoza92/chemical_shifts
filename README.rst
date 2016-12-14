@@ -21,7 +21,7 @@ final_project
 
 How to run the code with inputs given in the terminal
 --------
-This package genereates a 2d NOESY spectrum of plumed chemical shifts. In this example cs-cs-100.dat in final_project folder has the plumed outputs. The package computes NOEs and makes a plot of it and save it as final_project.png. Another file that is needed is called COLVARN_outputs has the labels of atoms from which the NOEs are computed.
+This package genereates a 2d NOESY spectrum of plumed chemical shifts. In this example cs-cs-100.dat in final_project folder has the plumed outputs. The package computes NOEs and makes a plot of it and save it as final_project.png. Another file that is needed is called COLVARN_outputs has the labels of atoms from which the NOEs are computed. The package is parallelized for faster calculations.
 
 
 
