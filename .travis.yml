@@ -27,7 +27,7 @@ before_install:
 script: 
 - coverage run --source=final_project/final_project.py setup.py test
 - coverage report -m
-
+after_success: coveralls
 language: python
 python: 2.7
 
