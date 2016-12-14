@@ -21,6 +21,7 @@ install:
 before_install:
 - pip install coverage
 - pip install matplotlib
+- pip install scipy
 - sudo apt-get install -qq python-numpy python-scipy python-matplotlib
 
 script: coverage run  setup.py test
