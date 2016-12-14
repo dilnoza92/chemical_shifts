@@ -16,6 +16,8 @@ final_project
 .. image:: https://pyup.io/repos/github/dilnoza92/final_project/shield.svg
      :target: https://pyup.io/repos/github/dilnoza92/final_project/
      :alt: Updates
+.. image:: https://coveralls.io/repos/github/dilnoza92/chemical_shifts/badge.svg?branch=master
+:target: https://coveralls.io/github/dilnoza92/schrodinger?branch=master
 
 
 
