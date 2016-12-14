@@ -12,11 +12,7 @@ Tests for `final_project` module.
 import sys
 import unittest
 from contextlib import contextmanager
-
 from final_project import final_project
-from final_project import cli
-
-
 
 class TestFinal_project(unittest.TestCase):
 
