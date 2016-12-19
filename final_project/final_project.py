@@ -1,27 +1,9 @@
 # -*- coding: utf-8 -*-  
 from math import exp
-from multiprocessing import Process
+import multiprocessing
+import math
+from multiprocessing import Process, Array, Value, Pool
 import os
-
-'''def info(title):
-    print(title)
-    print('module name:', __name__)
-    print('parent process:', os.getppid())
-    print('process id:', os.getpid())
-
-def f(name):
-    info('function f')
-    print('hello', name)
-
-if __name__ == '__main__':
-    info('main line')
-    p = Process(target=f, args=('bob',))
-    p.start()
-    p.join()
-from multiprocessing import Pool, cpu_count
-pool = Pool(processes=cpu_count())
-'''
-#import plotly.plotly as py
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -114,7 +96,6 @@ shiftss=chemical_shifts(cs_file_name, 'nh')
 last_atom=len(shiftss)-1
 shiftss[0]=105
 shiftss[last_atom]=135
-len(shiftss)
 for i in range(len(shiftss)):
     shiftss[i]=float(shiftss[i])
 def total_atom(variables_list):
@@ -171,9 +152,10 @@ def converted_variables(filename):
     for i in range(number_atoms):
         word=line0_split[i]
         line0_split[i]=word.replace('_{}_'.format(total_atoms[number_atoms-1][0]), '_{}_'.format(total_atoms[number_atoms-1][1]))
-    print line0_split[0]
+    line0_split[0]
     return line0_split        
 new_variables=converted_variables(colvar_file)
+variable_averagenoe=[]                     #empty array that contains the atoms that will have strong intensities and show intensities and restraints
 variable_averagenoe=[]                     #empty array that contains the atoms that will have strong intensities and show intensities and restraints
 for  i in range(len(noe_results)):
     if (i==0):
@@ -185,14 +167,53 @@ for  i in range(len(noe_results)):
         variable_noe.append(noe)                  #append the noe
         variable_noe.append(dist)                 #append the distance
         variable_averagenoe.append(variable_noe)  # for a given array of results noe_results[i] the corresponding atoms, noe intensity and noe distance will be saved
+'''
+def function(array, new_variables1):
+    variable_averagenoe1=[] 
+    for  i in range(len(array)):
+        if (i==0):
+            next
+        else:
+            variable_noe=[]                           #an array which will save a string of atoms interacting and the corresponding value of average NOE intensity and distance
+            noe, dist=noe_f(array[i])           #computes an noe and distance restraint from an array of noe measurements.
+            variable_noe.append(new_variables1[i])     #adds the corresponding new labels for the interacting atoms
+            variable_noe.append(noe)                  #append the noe
+            variable_noe.append(dist)                 #append the distance
+            variable_averagenoe1.append(variable_noe)  # for a given array of results noe_results[i] the corresponding atoms, noe intensity and noe distance will be saved
+    return variable_averagenoe1
+variable_averagenoe=[]
+    
+if __name__=='__main__':
+    num_processor=multiprocessing.cpu_count()
+    #print num_processor
+    length=len(noe_results)
+    
+    print new_variables, noe_results
+    parallel_data1=[]
+    parallel_data2=[]
+    for i in range(num_processor):
+        start=int( math.ceil(i*length/num_processor))
+        end=int(math.ceil(i*length/num_processor+length/num_processor-1))
+        print start,end
+        a=noe_results[start:end]
+        print len(a)
+        b=new_variables[start:end]
+        parallel_data1.append(a)
+        parallel_data2.append(b)
 
+    p=Pool(num_processor)
+    array_results=p.map(function,parallel_data1, parallel_data2)#variable_averagenoe)
+    print array_results
+    for i in range(num_processor):
+        variable_averagenoe+=(array_results[i])
+'''        
 small_dist_atoms_1=[]#1st atoms of NOESY 
 small_dist_atoms_2=[]#2nd atoms of NOESY
 intensities=[]#intensities
-def atoms_distances(array_of_comb_numb):
-    #takes an array of interacting atoms, intensity, and distance as an array element and outputs intensities and interacting atoms that have a big enough intensity
-    #array_of_comb_numb: nx3 array, 1st colomn is the interacting atoms (comb_1_2), 2nd column is noe intensity, and 3rd column is 
-    #return:  three arrays will be returned that have the first atom, second atom and the corresponding NOE intensit
+def atoms_distances(array_of_comb_numb):    
+    '''    takes an array of interacting atoms, intensity, and distance as an array element and outputs intensities and interacting atoms that have a big enough intensity
+    array_of_comb_numb: nx3 array, 1st colomn is the interacting atoms (comb_1_2), 2nd column is noe intensity, and 3rd column is 
+    return:  three arrays will be returned that have the first atom, second atom and the corresponding NOE intensit'''
     for i in range(len(array_of_comb_numb)):
         if (array_of_comb_numb[i][2]>1):   # only atoms that are closer than 5.5 Angstroms will be considered
             next
@@ -215,8 +236,30 @@ def atoms_distances(array_of_comb_numb):
             small_dist_atoms_2.append(atom2)
             intensities.append(array_of_comb_numb[i][1]*conversion_factor)
             intensities.append(array_of_comb_numb[i][1]*conversion_factor)
-    return small_dist_atoms_1, small_dist_atoms_2, intensities 
-x_H,y_H, intense=atoms_distances(variable_averagenoe) #x atom, y atom, and corresponding interaction
+    return small_dist_atoms_1, small_dist_atoms_2, intensities
+if __name__=='__main__':
+    jobs=[]
+    num_processor=multiprocessing.cpu_count()
+    #print num_processor
+    length=len(variable_averagenoe)
+    parallel_data=[]
+    for i in range(num_processor):
+        start=int( math.ceil(i*length/num_processor))
+        end=int(math.ceil(i*length/num_processor+length/num_processor-1))
+        
+        a=variable_averagenoe[start:end]
+        parallel_data.append(a)
+    p=Pool(num_processor)
+    variable_results=p.map(atoms_distances,parallel_data)#variable_averagenoe)
+    x_H=[]
+    y_H=[]
+    intense=[]
+    for i in range(len(variable_results)):
+        x_H+=(variable_results[i][0])
+        y_H+=(variable_results[i][1])
+        intense+=(variable_results[i][2])
+    
+
 XX_means=np.array(x_H)                                #atoms on x_axis
 YY_means=np.array(y_H)                                #atoms on y_axis
 intens=np.array(intense)                              #noe intensity
@@ -233,11 +276,8 @@ def gaus(x, y, intensity):
        y - an array of atom indeces that will be in y-axis of 2D NOESY spectrum
        intensity- an array of intensity for corresponding atom indeces
     Returns:
-    
-       ZZZ-2D array that should have the gaussian for each interacting pair of atoms
-       
-    '''
-    ZZZ=np.zeros((len(X_points),len(X_points)))#N_atoms,N_atoms))                 #initialize 2d grid to zeros
+       ZZZ-2D array that should have the gaussian for each interacting pair of atoms'''
+    ZZZ=np.zeros((len(X_points),len(X_points)))     #initialize 2d grid to zeros
     for i in range(len(X_points)):                  #iterates through X atoms
         for k in range(len(X_points)):              #iterates through Y atoms
             for l in range(len(x)):                 #iterates though all neighbors that have to add to the guassian with their respective intensities  
@@ -251,17 +291,13 @@ sc=ax.scatter(x_H, y_H,ZZ)# intense)                      #scatter plot of NOESY
 ax.grid()
 plt.xlabel('chemical shifts')
 plt.ylabel('chemical shifts')
-plt.title(r'Scaller plot of 2D NOESY Spectroscopy of N atoms')
+plt.title(r'2D NOESY Spectroscopy Plot with Gaussians Added')
 plt.savefig('final_project_gaussian.png'.format(colvar_name)) 
 fig1, ax1 = plt.subplots()                            #start plotting
 sc=ax1.scatter(x_H, y_H,intense)                      #scatter plot of NOESY spectrum
 ax1.grid()
 plt.xlabel('chemical shifts')
 plt.ylabel('chemical shifts')
-plt.title(r'Gausian 2D NOESY Spectroscopy of N atoms')
+plt.title(r'Scatter Plot of 2D NOESY Spectroscopy of N atoms')
 plt.savefig('final_project_scatter_plot.png'.format(colvar_name)) 
 plt.show()
-
-plt.show()
-
-
