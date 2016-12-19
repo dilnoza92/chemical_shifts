@@ -237,6 +237,10 @@ def atoms_distances(array_of_comb_numb):
             intensities.append(array_of_comb_numb[i][1]*conversion_factor)
             intensities.append(array_of_comb_numb[i][1]*conversion_factor)
     return small_dist_atoms_1, small_dist_atoms_2, intensities
+x_H=[]
+y_H=[]
+intense=[]
+
 if __name__=='__main__':
     jobs=[]
     num_processor=multiprocessing.cpu_count()
@@ -251,9 +255,6 @@ if __name__=='__main__':
         parallel_data.append(a)
     p=Pool(num_processor)
     variable_results=p.map(atoms_distances,parallel_data)#variable_averagenoe)
-    x_H=[]
-    y_H=[]
-    intense=[]
     for i in range(len(variable_results)):
         x_H+=(variable_results[i][0])
         y_H+=(variable_results[i][1])
